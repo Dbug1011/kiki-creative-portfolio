@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MdAdd, MdArrowForward, MdArrowOutward, MdMailOutline, MdPlayArrow } from "react-icons/md";
 import { SiLinkedin, SiTiktok } from "react-icons/si";
+import HeroPortrait from "@/components/site/hero-portrait";
 import OpenInViewer from "@/components/site/play-button";
 import ReelGrid from "@/components/site/reel-grid";
 import ResumeButton from "@/components/site/resume-button";
@@ -100,17 +101,7 @@ export default async function Home() {
                 </span>
               </span>
             </h1>
-            <div className="feather-portrait relative mx-auto mt-6 aspect-[3/4] w-full max-w-[340px] md:order-2 md:mt-0 md:max-w-[400px]">
-              <Image
-                src="/photos/portrait-headshot-soft.webp"
-                alt="Portrait of Karis Ruth Jumawan"
-                fill
-                priority
-                quality={92}
-                sizes="(min-width: 768px) 400px, 340px"
-                className="object-contain object-bottom"
-              />
-            </div>
+            <HeroPortrait className="mx-auto mt-6 max-w-[340px] md:order-2 md:mt-0 md:max-w-[400px]" />
           </div>
 
           <div className="relative -mt-16 flex flex-col items-center pb-20 text-center md:-mt-20">
