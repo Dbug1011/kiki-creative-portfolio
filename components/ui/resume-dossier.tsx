@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MdClose, MdMailOutline, MdOpenInNew, MdPlace } from "react-icons/md";
+import { PiXBold, PiEnvelopeSimpleDuotone, PiArrowSquareOutBold, PiMapPinDuotone } from "react-icons/pi";
 import { useMounted } from "@/app/hooks/use-mounted";
 import { cn } from "@/lib/utils";
 import {
@@ -330,19 +330,19 @@ export default function ResumeDossier({
               aria-label="Close résumé"
               className="shrink-0 rounded-full border border-white/15 p-2 text-white/80 transition-colors hover:border-purple-300/50 hover:bg-white/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-400"
             >
-              <MdClose className="text-lg" aria-hidden="true" />
+              <PiXBold className="text-lg" aria-hidden="true" />
             </button>
           </div>
 
           <div className="mt-3 flex flex-wrap gap-1.5 text-xs">
             <span className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-white/60">
-              <MdPlace aria-hidden="true" /> {profile.location}
+              <PiMapPinDuotone aria-hidden="true" /> {profile.location}
             </span>
             <a
               href={`mailto:${profile.email}`}
               className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-white/70 transition-colors hover:border-purple-300/40 hover:text-white"
             >
-              <MdMailOutline aria-hidden="true" /> {profile.email}
+              <PiEnvelopeSimpleDuotone aria-hidden="true" /> {profile.email}
             </a>
             {profile.links.map((l) => (
               <a
@@ -352,7 +352,7 @@ export default function ResumeDossier({
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-1 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-white/70 transition-colors hover:border-purple-300/40 hover:text-white"
               >
-                {l.label} <MdOpenInNew aria-hidden="true" className="opacity-60" />
+                {l.label} <PiArrowSquareOutBold aria-hidden="true" className="opacity-60" />
               </a>
             ))}
           </div>

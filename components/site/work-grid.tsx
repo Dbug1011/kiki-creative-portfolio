@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { MdArrowForward } from "react-icons/md";
+import { PiArrowRightBold } from "react-icons/pi";
 import { disciplines, work, type Discipline, type WorkItem } from "@/lib/work";
 import { cn } from "@/lib/utils";
 
@@ -143,7 +143,7 @@ function WorkCard({ item }: { item: WorkItem }) {
           <h3 className="mt-1 font-display text-2xl font-bold tracking-tight text-white">{item.title}</h3>
           <p className="mt-1.5 max-w-md text-sm leading-relaxed text-white/60">{item.summary}</p>
         </div>
-        <MdArrowForward
+        <PiArrowRightBold
           aria-hidden="true"
           className="mt-6 shrink-0 text-xl text-fuchsia-300 transition-transform group-hover:translate-x-1"
         />

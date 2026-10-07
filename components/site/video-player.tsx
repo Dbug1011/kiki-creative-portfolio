@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { MdPlayArrow } from "react-icons/md";
+import { PiPlayFill } from "react-icons/pi";
 import { cn } from "@/lib/utils";
 
 /**
@@ -57,7 +57,7 @@ export default function VideoPlayer({
           <Image src={poster} alt="" fill priority sizes="(min-width: 1152px) 1152px, 100vw" className="object-cover" />
           <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
           <span className="absolute left-1/2 top-1/2 flex h-20 w-20 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-white/15 text-4xl text-white backdrop-blur-md transition-transform duration-300 group-hover:scale-110 group-focus-visible:ring-2 group-focus-visible:ring-fuchsia-300">
-            <MdPlayArrow aria-hidden="true" className="ml-1" />
+            <PiPlayFill aria-hidden="true" className="ml-1" />
           </span>
         </button>
       )}

@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Mrs_Saint_Delafield } from "next/font/google";
 import "./globals.css";
 import { DocumentViewerProvider } from "@/components/ui/document-viewer";
-import CursorGlow from "@/components/ui/cursor-glow";
+import CatCursor from "@/components/ui/cat-cursor";
 import AmbientBackground from "@/components/ui/ambient-background";
 import SiteNav from "@/components/site/site-nav";
 import SiteFooter from "@/components/site/site-footer";
@@ -11,6 +11,8 @@ import SiteFooter from "@/components/site/site-footer";
 // controls and statistics). `--font-display` points at it too, so older
 // `font-display` classes stay consistent.
 const sans = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swap" });
+// Handwritten signature next to the hero greeting only.
+const script = Mrs_Saint_Delafield({ subsets: ["latin"], weight: "400", variable: "--font-script", display: "swap" });
 
 const description =
   "Karis Ruth Jumawan: social media management, SaaS explainer videos, and short-form reels and video editing.";
@@ -41,7 +43,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={sans.variable} style={{ ["--font-display" as string]: "var(--font-sans)" }}>
+    <html lang="en" className={`${sans.variable} ${script.variable}`} style={{ ["--font-display" as string]: "var(--font-sans)" }}>
       <body className="font-sans antialiased">
         {/* One fixed background for the whole site; content sits above it. */}
         <AmbientBackground className="fixed" />
@@ -52,7 +54,7 @@ export default function RootLayout({
             <SiteFooter />
           </div>
         </DocumentViewerProvider>
-        <CursorGlow />
+        <CatCursor />
       </body>
     </html>
   );

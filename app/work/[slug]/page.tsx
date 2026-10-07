@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { MdArrowBack, MdArrowForward } from "react-icons/md";
+import { PiArrowLeftBold, PiArrowRightBold } from "react-icons/pi";
 import VideoPlayer from "@/components/site/video-player";
 import { disciplines, getWork, work } from "@/lib/work";
 
@@ -44,7 +44,7 @@ export default function WorkPage({ params }: Params) {
         href="/#work"
         className="inline-flex items-center gap-1.5 rounded text-sm text-white/55 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
       >
-        <MdArrowBack aria-hidden="true" /> All work
+        <PiArrowLeftBold aria-hidden="true" /> All work
       </Link>
 
       <header className="mt-8">
@@ -162,7 +162,7 @@ export default function WorkPage({ params }: Params) {
           <p className="mt-1 font-display text-3xl font-bold text-white">{next.title}</p>
           <p className="mt-1 text-sm text-white/55">{next.client}</p>
         </div>
-        <MdArrowForward aria-hidden="true" className="hidden text-3xl text-fuchsia-300 transition-transform group-hover:translate-x-1 sm:block" />
+        <PiArrowRightBold aria-hidden="true" className="hidden text-3xl text-fuchsia-300 transition-transform group-hover:translate-x-1 sm:block" />
       </Link>
     </article>
   );

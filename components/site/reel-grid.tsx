@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { MdArrowOutward, MdFavorite, MdPlayArrow, MdVisibility } from "react-icons/md";
+import { PiArrowUpRightBold, PiHeartFill, PiPlayFill, PiEyeDuotone } from "react-icons/pi";
 import { compact, postUrl, type Post } from "@/lib/social";
 
 /**
@@ -38,7 +38,7 @@ export default function ReelGrid({ reels }: { reels: (Post & { cover: string | n
                     <img src={reel.cover} alt="" loading="lazy" className="absolute inset-0 h-full w-full object-cover" />
                   )}
                   <span className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-black/60 text-3xl text-white ring-1 ring-white/30 backdrop-blur-sm transition-transform duration-200 group-hover:scale-110 group-focus-visible:ring-2 group-focus-visible:ring-fuchsia-200">
-                    <MdPlayArrow aria-hidden="true" className="ml-0.5" />
+                    <PiPlayFill aria-hidden="true" className="ml-0.5" />
                   </span>
                 </button>
               )}
@@ -51,11 +51,11 @@ export default function ReelGrid({ reels }: { reels: (Post & { cover: string | n
               <div className="mt-3 flex items-center justify-between text-sm text-white/60">
                 <span className="tabular inline-flex items-center gap-3">
                   <span className="inline-flex items-center gap-1.5 text-white">
-                    <MdVisibility aria-hidden="true" /> {compact(reel.views)}
+                    <PiEyeDuotone aria-hidden="true" /> {compact(reel.views)}
                     <span className="sr-only">views</span>
                   </span>
                   <span className="inline-flex items-center gap-1.5">
-                    <MdFavorite aria-hidden="true" /> {compact(reel.likes)}
+                    <PiHeartFill aria-hidden="true" /> {compact(reel.likes)}
                     <span className="sr-only">likes</span>
                   </span>
                 </span>
@@ -65,7 +65,7 @@ export default function ReelGrid({ reels }: { reels: (Post & { cover: string | n
                   rel="noopener noreferrer"
                   className="focus-ring inline-flex min-h-[44px] items-center gap-1 rounded px-1 text-white/70 hover:text-white"
                 >
-                  TikTok <MdArrowOutward aria-hidden="true" />
+                  TikTok <PiArrowUpRightBold aria-hidden="true" />
                 </a>
               </div>
             </div>

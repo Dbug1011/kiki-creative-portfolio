@@ -1,75 +1,82 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef } from "react";
 import { cn } from "@/lib/utils";
 
-const EASE = "[transition-timing-function:cubic-bezier(0.22,1,0.36,1)]";
-
 /**
- * Two aligned cutouts of the same pose. Formal by default; hovering (or
- * focusing, or tapping on touch screens) sweeps a glowing scan line down the
- * frame and reveals the tech look underneath it. Both images are the same
- * size and registered to each other, so only the outfit changes.
+ * Sneak peek: the formal portrait, with a soft circular lens that follows
+ * the pointer and shows the (aligned) tech look only inside it. Touch: the
+ * lens appears where you tap and follows your finger. Keyboard: focusing the
+ * portrait opens the lens over the face.
+ *
+ * The lens position and size are CSS variables written straight to the DOM
+ * (no React re-render per pointer move); `--peek-r` is registered with
+ * @property in globals.css so its open/close animates.
  */
 export default function HeroPortrait({ className }: { className?: string }) {
-  const [tech, setTech] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const place = (clientX: number, clientY: number) => {
+    const el = ref.current;
+    if (!el) return;
+    const box = el.getBoundingClientRect();
+    el.style.setProperty("--peek-x", `${clientX - box.left}px`);
+    el.style.setProperty("--peek-y", `${clientY - box.top}px`);
+  };
+  const open = (on: boolean) => ref.current?.style.setProperty("--peek-r", on ? "var(--peek-size)" : "0px");
 
   return (
-    <button
-      type="button"
-      aria-pressed={tech}
-      aria-label={tech ? "Show formal look" : "Show tech look"}
-      onPointerEnter={(e) => e.pointerType === "mouse" && setTech(true)}
-      onPointerLeave={(e) => e.pointerType === "mouse" && setTech(false)}
-      onClick={(e) => {
-        // Mouse users already toggled on enter/leave; taps and keys toggle here.
-        if ((e.nativeEvent as PointerEvent).pointerType !== "mouse") setTech((t) => !t);
+    <div
+      ref={ref}
+      role="img"
+      tabIndex={0}
+      aria-label="Portrait of Karis Ruth Jumawan. Move the pointer over it for a peek at her tech look."
+      onPointerEnter={(e) => {
+        place(e.clientX, e.clientY);
+        open(true);
       }}
-      className={cn("focus-ring group relative block w-full cursor-pointer rounded-2xl", className)}
+      onPointerMove={(e) => place(e.clientX, e.clientY)}
+      onPointerLeave={() => open(false)}
+      onPointerUp={(e) => e.pointerType !== "mouse" && open(false)}
+      onFocus={() => {
+        // Centre the lens on the face for keyboard users.
+        const el = ref.current;
+        if (!el) return;
+        el.style.setProperty("--peek-x", "50%");
+        el.style.setProperty("--peek-y", "30%");
+        open(true);
+      }}
+      onBlur={() => open(false)}
+      className={cn(
+        "peek focus-ring relative block w-full touch-none select-none rounded-2xl",
+        className
+      )}
     >
-      <div className="feather-portrait relative aspect-[3/4]">
+      <div className="relative aspect-[9/16]">
         <Image
-          src="/photos/hero-formal-v2.webp"
-          alt="Karis Ruth Jumawan in a black blazer"
+          src="/photos/hero-formal-v3.webp"
+          alt=""
           fill
           priority
           quality={92}
           sizes="(min-width: 768px) 400px, 340px"
           className="object-contain object-bottom"
+          draggable={false}
         />
-        <Image
-          src="/photos/hero-tech-v2.webp"
-          alt="Karis Ruth Jumawan in a silver top and mirrored visor"
-          fill
-          priority
-          quality={92}
-          sizes="(min-width: 768px) 400px, 340px"
-          className={cn(
-            "object-contain object-bottom transition-[clip-path] duration-700 motion-reduce:transition-none",
-            EASE,
-            tech ? "[clip-path:inset(0_0_0_0)]" : "[clip-path:inset(0_0_100%_0)]"
-          )}
-        />
+        <div aria-hidden="true" className="peek-layer absolute inset-0">
+          <Image
+            src="/photos/hero-tech-v3.webp"
+            alt=""
+            fill
+            priority
+            quality={92}
+            sizes="(min-width: 768px) 400px, 340px"
+            className="object-contain object-bottom"
+            draggable={false}
+          />
+        </div>
       </div>
-
-      {/* Scan line riding the edge of the reveal */}
-      <span
-        aria-hidden="true"
-        className={cn(
-          "pointer-events-none absolute inset-x-[8%] h-px bg-gradient-to-r from-transparent via-pink-200 to-transparent shadow-[0_0_18px_4px_rgba(236,72,153,0.7)] transition-[top,opacity] duration-700 motion-reduce:hidden",
-          EASE,
-          tech ? "top-full opacity-0" : "top-0 opacity-0 group-hover:opacity-100"
-        )}
-      />
-
-      {/* Hint */}
-      <span className="pointer-events-none absolute bottom-[24%] left-1/2 inline-flex -translate-x-1/2 items-center gap-1.5 whitespace-nowrap rounded-full border border-white/15 bg-[#0b0718]/60 px-3 py-1.5 text-xs font-medium text-white/80 backdrop-blur-md transition-opacity duration-200 group-hover:opacity-0">
-        <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-pink-400 shadow-[0_0_8px_rgba(236,72,153,0.9)]" />
-        <span className="hidden [@media(hover:hover)]:inline">Hover</span>
-        <span className="[@media(hover:hover)]:hidden">Tap</span>
-        &nbsp;for {tech ? "formal look" : "tech mode"}
-      </span>
-    </button>
+    </div>
   );
 }

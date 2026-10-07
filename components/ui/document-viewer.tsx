@@ -11,7 +11,7 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MdClose, MdDownload, MdOpenInNew } from "react-icons/md";
+import { PiXBold, PiDownloadSimpleBold, PiArrowSquareOutBold } from "react-icons/pi";
 import { useMounted } from "@/app/hooks/use-mounted";
 import dynamic from "next/dynamic";
 
@@ -223,12 +223,12 @@ const FileViewerModal = ({
                 rel="noopener noreferrer"
                 className={`${actionClass} hidden sm:inline-flex`}
               >
-                <MdOpenInNew aria-hidden="true" />
+                <PiArrowSquareOutBold aria-hidden="true" />
                 New tab
               </a>
               {/* Only downloads when the visitor asks for it. */}
               <a href={src} download className={actionClass}>
-                <MdDownload aria-hidden="true" />
+                <PiDownloadSimpleBold aria-hidden="true" />
                 <span className="hidden sm:inline">Download</span>
               </a>
             </>
@@ -240,7 +240,7 @@ const FileViewerModal = ({
             aria-label="Close"
             className={`${actionClass} px-2`}
           >
-            <MdClose className="text-base" aria-hidden="true" />
+            <PiXBold className="text-base" aria-hidden="true" />
           </button>
           </div>
         </div>
@@ -288,7 +288,7 @@ const PreviewUnavailable = ({
       You can still open {title} in its own tab if you&apos;d like.
     </p>
     <a href={src} target="_blank" rel="noopener noreferrer" className={actionClass}>
-      <MdOpenInNew aria-hidden="true" />
+      <PiArrowSquareOutBold aria-hidden="true" />
       Open in new tab
     </a>
   </div>

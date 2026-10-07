@@ -1,4 +1,4 @@
-import { MdArrowOutward } from "react-icons/md";
+import { PiArrowUpRightBold } from "react-icons/pi";
 import SocialIcons from "@/components/ui/socialicons";
 import { site } from "@/lib/site";
 
@@ -15,14 +15,14 @@ const SiteFooter = () => (
           Kiki<span className="text-fuchsia-400">.</span>
         </p>
         <p className="mt-1 text-sm text-white/55">
-          © {new Date().getFullYear()} {site.name} · {site.location}
+          © {new Date().getFullYear()} {site.name}
         </p>
       </div>
       <div className="flex flex-wrap items-center gap-5 text-lg text-white/75">
         <SocialIcons />
       </div>
       <a href={site.techUrl} className="focus-ring inline-flex items-center gap-1 rounded text-sm text-white/65 hover:text-white">
-        Engineering portfolio <MdArrowOutward aria-hidden="true" />
+        Engineering portfolio <PiArrowUpRightBold aria-hidden="true" />
       </a>
     </div>
   </footer>

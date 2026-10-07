@@ -77,3 +77,18 @@ export async function fetchCover(id: string): Promise<string | null> {
     return null;
   }
 }
+
+export type Comment = { text: string; likes: number; handle: string; on: string };
+
+/**
+ * Real comments from the top videos, as written (Taglish kept as-is), read
+ * on the capture date above. Handles are masked: these are other people.
+ */
+export const comments: Comment[] = [
+  { text: "May classmate akong lalaki sa engineering (2ndyear). Super talino, laging uno sa major and number 1 student sa batch namin the fact na super hirap ng engineering. He just turned 17 no'ng January.", likes: 4845, handle: "@e•••r", on: "7401103758760955154" },
+  { text: "Just turned 20 and firt yr college😭", likes: 1357, handle: "@f•••s", on: "7401103758760955154" },
+  { text: "me na 20 y/o, board passer (licensed)", likes: 1321, handle: "@b•••e", on: "7401103758760955154" },
+  { text: "The only subject that we aspire to hit till failure 🔥🗿", likes: 670, handle: "@a•••_", on: "7404862194023664917" },
+  { text: "So i have to be good at math to do all of this?", likes: 483, handle: "@i•••7", on: "7510452000157388040" },
+  { text: "nakaka excite nmn mag computer engineering, mag grade 12 plang ems upcoming school year TVL-ICT Strand🫶", likes: 241, handle: "@a•••0", on: "7510452000157388040" },
+];
