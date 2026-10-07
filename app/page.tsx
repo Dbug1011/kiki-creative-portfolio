@@ -7,7 +7,7 @@ import ReelGrid from "@/components/site/reel-grid";
 import ResumeButton from "@/components/site/resume-button";
 import WorkGrid from "@/components/site/work-grid";
 import { site } from "@/lib/site";
-import { compact, engagementRate, fetchCover, postUrl, reels, tiktok, topPosts } from "@/lib/social";
+import { compact, engagementRate, fetchCover, postUrl, reels, tiktok, topPosts, totalTopViews } from "@/lib/social";
 
 // TikTok cover URLs expire, so the page refreshes them twice a day.
 export const revalidate = 43_200;
@@ -76,7 +76,7 @@ export default async function Home() {
     { value: tiktok.followers.toLocaleString("en"), label: "TikTok followers" },
     { value: compact(tiktok.likes), label: "Total likes" },
     { value: compact(top.views), label: "Views on top video" },
-    { value: `${(engagementRate(top) * 100).toFixed(1)}%`, label: "Top video engagement" },
+    { value: compact(totalTopViews), label: `Views from ${topPosts.length} posts over 100K` },
   ];
 
   return (
@@ -154,20 +154,22 @@ export default async function Home() {
 
           <div className="card mt-4 overflow-hidden">
             <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/[0.07] px-6 py-4">
-              <h3 className="text-[17px] font-semibold text-white">Top posts</h3>
+              <h3 className="text-[17px] font-semibold text-white">Every post over 100K views</h3>
               <a href={tiktok.url} target="_blank" rel="noopener noreferrer" className="focus-ring inline-flex items-center gap-1.5 rounded text-sm text-fuchsia-300 hover:text-fuchsia-200">
                 <SiTiktok aria-hidden="true" /> @{tiktok.handle} <MdArrowOutward aria-hidden="true" />
               </a>
             </div>
             <div className="overflow-x-auto">
-              <table className="tabular w-full min-w-[600px] text-left text-sm">
+              <table className="tabular w-full min-w-[760px] text-left text-sm">
                 <thead className="text-white/50">
                   <tr>
                     <th scope="col" className="px-6 py-3 font-medium">Post</th>
                     <th scope="col" className="px-3 py-3 text-right font-medium">Views</th>
                     <th scope="col" className="px-3 py-3 text-right font-medium">Likes</th>
                     <th scope="col" className="px-3 py-3 text-right font-medium">Comments</th>
-                    <th scope="col" className="px-6 py-3 text-right font-medium">Shares</th>
+                    <th scope="col" className="px-3 py-3 text-right font-medium">Shares</th>
+                    <th scope="col" className="px-3 py-3 text-right font-medium">Saves</th>
+                    <th scope="col" className="px-6 py-3 text-right font-medium">Engagement</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -182,7 +184,9 @@ export default async function Home() {
                       <td className="px-3 py-3.5 text-right text-white">{compact(p.views)}</td>
                       <td className="px-3 py-3.5 text-right text-white/75">{compact(p.likes)}</td>
                       <td className="px-3 py-3.5 text-right text-white/75">{p.comments.toLocaleString("en")}</td>
-                      <td className="px-6 py-3.5 text-right text-white/75">{p.shares.toLocaleString("en")}</td>
+                      <td className="px-3 py-3.5 text-right text-white/75">{p.shares.toLocaleString("en")}</td>
+                      <td className="px-3 py-3.5 text-right text-white/75">{p.saves ? p.saves.toLocaleString("en") : "–"}</td>
+                      <td className="px-6 py-3.5 text-right text-fuchsia-200">{(engagementRate(p) * 100).toFixed(1)}%</td>
                     </tr>
                   ))}
                 </tbody>
@@ -191,7 +195,7 @@ export default async function Home() {
           </div>
           <p className="mt-3 text-xs leading-relaxed text-white/50">
             From my own TikTok{tiktok.organic && ", grown organically with no paid promotion"}. Read from the public profile and post pages on{" "}
-            {tiktok.capturedAt}. Engagement = (likes + comments + shares) ÷ views.
+            {tiktok.capturedAt}. Engagement = (likes + comments + shares) ÷ views. Saves aren&apos;t shown for photo carousels.
           </p>
         </div>
       </section>
@@ -235,8 +239,9 @@ export default async function Home() {
                 From my own feed
               </h2>
               <p className="mt-4 max-w-[34rem] text-base leading-relaxed text-white/65">
-                Shot, edited, and posted by me, all organic reach. Press play to watch on the
-                page; view counts as of {tiktok.capturedAt}.
+                Every video of mine that passed 100K views: shot, edited, and
+                posted by me, all organic reach. Press play to watch on the
+                page; numbers as of {tiktok.capturedAt}.
               </p>
             </div>
             <a href={tiktok.url} target="_blank" rel="noopener noreferrer" className="btn-ghost">
@@ -291,8 +296,9 @@ export default async function Home() {
             <div className="mt-6 max-w-[34rem] space-y-4 text-base leading-relaxed text-white/70">
               <p>
                 I&apos;ve been filming and editing since I was young, and I
-                still run my own TikTok, where a single edit passed half a
-                million views.
+                still run my own TikTok, where one video passed a million
+                views and {topPosts.length} posts have cleared 100K, all
+                organic.
               </p>
               <p>
                 By day I&apos;m a GTM Customer Engineer at a cloud SaaS company

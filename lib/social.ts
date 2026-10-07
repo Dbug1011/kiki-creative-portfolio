@@ -1,5 +1,5 @@
 // Social proof from Kiki's own TikTok. Every number here was read from the
-// public profile / post pages on the capture date below. Re-check and update
+// public profile / post pages on the capture date below (258 posts checked). Re-check and update
 // them together (and bump `capturedAt`) rather than editing one in isolation.
 
 export const tiktok = {
@@ -12,70 +12,49 @@ export const tiktok = {
   likes: 759_800,
 };
 
-export type TopPost = {
+export type Post = {
   id: string;
   kind: "video" | "photo";
   title: string;
+  /** Short category label shown on reel cards. */
+  tag: string;
+  posted: string;
   views: number;
   likes: number;
   comments: number;
   shares: number;
+  /** Not exposed for photo carousels. */
+  saves?: number;
 };
 
-/** Highest-reach posts with full engagement numbers. */
-export const topPosts: TopPost[] = [
-  {
-    id: "7404862194023664917",
-    kind: "video",
-    title: "Balancing engineering and gym life",
-    views: 510_000,
-    likes: 68_600,
-    comments: 301,
-    shares: 4556,
-  },
-  {
-    id: "7390964643646262545",
-    kind: "photo",
-    title: "Tips for incoming computer engineering students, part 1",
-    views: 174_500,
-    likes: 8270,
-    comments: 165,
-    shares: 510,
-  },
-  {
-    id: "7392448064650333458",
-    kind: "photo",
-    title: "Tips for incoming computer engineering students, part 2",
-    views: 150_100,
-    likes: 8393,
-    comments: 208,
-    shares: 458,
-  },
+/**
+ * Every post over 100K views (all 258 posts on the profile were checked),
+ * highest first.
+ */
+export const topPosts: Post[] = [
+  { id: "7401103758760955154", kind: "video", title: "People say I'm too young for my year level", tag: "Student life", posted: "2024-08-09", views: 1_100_000, likes: 62_800, comments: 1272, shares: 2653, saves: 1716 },
+  { id: "7510452000157388040", kind: "video", title: "POV: you're a 3rd-year computer engineering student", tag: "Trend template", posted: "2025-05-31", views: 566_800, likes: 44_900, comments: 271, shares: 2996, saves: 4439 },
+  { id: "7404862194023664917", kind: "video", title: "Balancing engineering and gym life", tag: "Lifestyle edit", posted: "2024-08-19", views: 510_000, likes: 68_600, comments: 301, shares: 4556, saves: 4265 },
+  { id: "7411852823303851265", kind: "video", title: "My version: big bike trend", tag: "Trend edit", posted: "2024-09-07", views: 446_100, likes: 60_000, comments: 672, shares: 2382, saves: 5564 },
+  { id: "7424089713792896273", kind: "video", title: "Is engineering a red flag?", tag: "Comedy skit", posted: "2024-10-10", views: 308_300, likes: 34_000, comments: 216, shares: 2272, saves: 2664 },
+  { id: "7642213041706241288", kind: "video", title: "Started Computer Engineering without knowing how to code", tag: "Story reel", posted: "2026-05-21", views: 214_800, likes: 17_000, comments: 123, shares: 386, saves: 796 },
+  { id: "7390964643646262545", kind: "photo", title: "Tips for incoming computer engineering students, part 1", tag: "Carousel", posted: "2024-07-13", views: 174_500, likes: 8270, comments: 165, shares: 510 },
+  { id: "7392448064650333458", kind: "photo", title: "Tips for incoming computer engineering students, part 2", tag: "Carousel", posted: "2024-07-17", views: 150_100, likes: 8393, comments: 208, shares: 458 },
+  { id: "7660830813164014855", kind: "video", title: "My calculator throughout college", tag: "Product review", posted: "2026-07-10", views: 112_100, likes: 707, comments: 26, shares: 154, saves: 296 },
+  { id: "7508373781413465362", kind: "video", title: "A wonderful way to end the semester", tag: "Project recap", posted: "2025-05-25", views: 108_200, likes: 9507, comments: 60, shares: 1009, saves: 1221 },
 ];
 
-export type Reel = {
-  id: string;
-  title: string;
-  tag: string;
-  views: number;
-};
+/** Videos shown as playable 9:16 cards. Photo carousels are left out:
+ *  TikTok's player and oEmbed covers don't support them. */
+export const reels = topPosts.filter((p) => p.kind === "video");
 
-/** Vertical videos shown as playable 9:16 cards (videos only: TikTok's
- *  player and oEmbed covers don't support photo carousels). */
-export const reels: Reel[] = [
-  { id: "7404862194023664917", title: "Balancing engineering and gym life", tag: "Lifestyle edit", views: 510_000 },
-  { id: "7690517141665352980", title: "Struggling to manage your time? Watch this", tag: "Talking-head reel", views: 2970 },
-  { id: "7690528481016335634", title: "Day 1 editing this style of reel", tag: "Editing experiment", views: 1792 },
-  { id: "7681528525039471879", title: "A second monitor is a productivity game changer", tag: "Tech tip", views: 1527 },
-  { id: "7690987443679481108", title: "Started computer engineering not knowing what to do", tag: "Advice reel", views: 1166 },
-  { id: "7692453440743558420", title: "Job opportunities in computer engineering", tag: "Q&A reply", views: 1156 },
-];
+export const totalTopViews = topPosts.reduce((n, p) => n + p.views, 0);
 
 export const postUrl = (p: { id: string; kind?: "video" | "photo" }) =>
   `${tiktok.url}/${p.kind === "photo" ? "photo" : "video"}/${p.id}`;
 
 /** (likes + comments + shares) / views */
-export const engagementRate = (p: TopPost) => (p.likes + p.comments + p.shares) / p.views;
+export const engagementRate = (p: Post) => (p.likes + p.comments + p.shares) / p.views;
 
 export const compact = (n: number) =>
   new Intl.NumberFormat("en", { notation: "compact", maximumFractionDigits: 1 }).format(n);

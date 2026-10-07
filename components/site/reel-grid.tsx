@@ -1,18 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { MdArrowOutward, MdPlayArrow, MdVisibility } from "react-icons/md";
-import { compact, postUrl, type Reel } from "@/lib/social";
+import { MdArrowOutward, MdFavorite, MdPlayArrow, MdVisibility } from "react-icons/md";
+import { compact, postUrl, type Post } from "@/lib/social";
 
 /**
  * Vertical 9:16 reel cards. The cover is a static image; TikTok's player
  * only loads when a visitor presses play, and only one plays at a time.
  */
-export default function ReelGrid({ reels }: { reels: (Reel & { cover: string | null })[] }) {
+export default function ReelGrid({ reels }: { reels: (Post & { cover: string | null })[] }) {
   const [playing, setPlaying] = useState<string | null>(null);
 
   return (
-    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <ul className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {reels.map((reel) => (
         <li key={reel.id}>
           <article className="card overflow-hidden">
@@ -49,8 +49,15 @@ export default function ReelGrid({ reels }: { reels: (Reel & { cover: string | n
               <p className="text-xs font-medium text-fuchsia-300">{reel.tag}</p>
               <h3 className="mt-1.5 text-[17px] font-semibold leading-snug tracking-[-0.01em] text-white">{reel.title}</h3>
               <div className="mt-3 flex items-center justify-between text-sm text-white/60">
-                <span className="tabular inline-flex items-center gap-1.5">
-                  <MdVisibility aria-hidden="true" /> {compact(reel.views)} views
+                <span className="tabular inline-flex items-center gap-3">
+                  <span className="inline-flex items-center gap-1.5 text-white">
+                    <MdVisibility aria-hidden="true" /> {compact(reel.views)}
+                    <span className="sr-only">views</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5">
+                    <MdFavorite aria-hidden="true" /> {compact(reel.likes)}
+                    <span className="sr-only">likes</span>
+                  </span>
                 </span>
                 <a
                   href={postUrl(reel)}
