@@ -30,7 +30,7 @@ export default function HeroPortrait({ className }: { className?: string }) {
     >
       <div className="feather-portrait relative aspect-[3/4]">
         <Image
-          src="/photos/hero-formal.webp"
+          src="/photos/hero-formal-v2.webp"
           alt="Karis Ruth Jumawan in a black blazer"
           fill
           priority
@@ -39,7 +39,7 @@ export default function HeroPortrait({ className }: { className?: string }) {
           className="object-contain object-bottom"
         />
         <Image
-          src="/photos/hero-tech.webp"
+          src="/photos/hero-tech-v2.webp"
           alt="Karis Ruth Jumawan in a silver top and mirrored visor"
           fill
           priority
