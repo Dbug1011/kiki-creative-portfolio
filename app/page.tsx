@@ -134,7 +134,15 @@ export default async function Home() {
       {/* ------------------------------------------------------ Evidence */}
       <section aria-labelledby="proof-h" className="relative">
         <div className="mx-auto max-w-[1200px] px-5 pb-24 sm:px-8">
-          <h2 id="proof-h" className="sr-only">Results on my own TikTok</h2>
+          <div className="mb-5 flex flex-wrap items-center gap-3">
+            <h2 id="proof-h" className="text-lg font-semibold text-white">Results on my own TikTok</h2>
+            {tiktok.organic && (
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald-300/30 bg-emerald-400/10 px-3 py-1 text-[13px] font-medium text-emerald-200">
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-emerald-300 shadow-[0_0_8px_rgba(110,231,183,0.9)]" />
+                100% organic · no paid ads
+              </span>
+            )}
+          </div>
           <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             {metrics.map((m) => (
               <div key={m.label} className="glass rounded-2xl p-6">
@@ -182,7 +190,7 @@ export default async function Home() {
             </div>
           </div>
           <p className="mt-3 text-xs leading-relaxed text-white/50">
-            From my own TikTok, read from the public profile and post pages on{" "}
+            From my own TikTok{tiktok.organic && ", grown organically with no paid promotion"}. Read from the public profile and post pages on{" "}
             {tiktok.capturedAt}. Engagement = (likes + comments + shares) ÷ views.
           </p>
         </div>
@@ -227,7 +235,7 @@ export default async function Home() {
                 From my own feed
               </h2>
               <p className="mt-4 max-w-[34rem] text-base leading-relaxed text-white/65">
-                Shot, edited, and posted by me. Press play to watch on the
+                Shot, edited, and posted by me, all organic reach. Press play to watch on the
                 page; view counts as of {tiktok.capturedAt}.
               </p>
             </div>

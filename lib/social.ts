@@ -6,6 +6,8 @@ export const tiktok = {
   handle: "kikiimnida",
   url: "https://www.tiktok.com/@kikiimnida",
   capturedAt: "7 Oct 2026",
+  /** Confirmed by Kiki: no post has ever been promoted or boosted. */
+  organic: true,
   followers: 6994,
   likes: 759_800,
 };
