@@ -1,155 +1,212 @@
 import Image from "next/image";
 import Link from "next/link";
-import { MdArrowDownward, MdOutlinePictureAsPdf } from "react-icons/md";
-import {
-  SiAdobeaftereffects,
-  SiAdobeillustrator,
-  SiAdobelightroom,
-  SiAdobephotoshop,
-  SiAdobepremierepro,
-  SiBlender,
-  SiFigma,
-} from "react-icons/si";
-import HeroLoop from "@/components/site/hero-loop";
-import KineticHeadline from "@/components/site/kinetic-headline";
+import { MdAdd, MdArrowForward, MdArrowOutward, MdMailOutline, MdPlayArrow } from "react-icons/md";
+import { SiLinkedin, SiTiktok } from "react-icons/si";
 import OpenInViewer from "@/components/site/play-button";
+import ReelGrid from "@/components/site/reel-grid";
+import ResumeButton from "@/components/site/resume-button";
 import WorkGrid from "@/components/site/work-grid";
 import { site } from "@/lib/site";
+import { compact, engagementRate, fetchCover, postUrl, reels, tiktok, topPosts } from "@/lib/social";
+
+// TikTok cover URLs expire, so the page refreshes them twice a day.
+export const revalidate = 43_200;
+
+/* ------------------------------------------------------------------ */
+/* Content                                                             */
+/* ------------------------------------------------------------------ */
 
 const services = [
   {
+    title: "Social media management",
+    body: "Your accounts, run end to end: a content calendar, platform-native posts, replies to your community, and a monthly look at what worked.",
+    deliverables: ["Content calendar", "Posting & scheduling", "Community replies", "Monthly analytics"],
+  },
+  {
     title: "SaaS explainer videos",
-    body: "Turn a product, a pricing model, or a workflow into 15–60 seconds that a buyer actually gets.",
-    deliverables: ["Script & storyboard", "Diagram + chart animation", "Launch & social cuts"],
+    body: "Your product, pricing model, or workflow in 15–60 seconds a buyer actually gets. I learn the product before I write a word.",
+    deliverables: ["Script & storyboard", "UI & diagram animation", "Launch & social cuts"],
   },
   {
-    title: "Kinetic typography",
-    body: "Type that moves with intent. Brand statements, campaign openers, and title sequences without a voiceover.",
-    deliverables: ["Type-led sequences", "Lyric / quote pieces", "Bumpers & stingers"],
+    title: "Reels & short-form editing",
+    body: "Vertical edits built for the first two seconds: hooks, captions, pacing, and sound, for TikTok, Reels, and Shorts.",
+    deliverables: ["Hooks & captions", "Talking-head edits", "Trend formats"],
   },
   {
-    title: "Product UI walkthroughs",
-    body: "Real screens, cleaned up and animated, then connected to the 'why' with motion graphics.",
-    deliverables: ["UI capture & cleanup", "Feature highlights", "Onboarding clips"],
-  },
-  {
-    title: "Visual assets",
-    body: "Stills and graphics that sit next to the video: thumbnails, style frames, photography.",
-    deliverables: ["Style frames", "Thumbnails & covers", "Photography"],
+    title: "Kinetic type & motion",
+    body: "Type and UI that move with intent: brand statements, title sequences, bumpers, and the motion details around them.",
+    deliverables: ["Kinetic typography", "Bumpers & stingers", "Style frames"],
   },
 ];
 
-const process = [
-  { step: "Brief", body: "Audience, the one message, where it runs, and how long it can be." },
-  { step: "Script & boards", body: "Words first, then rough frames so we agree on the story before any animation." },
-  { step: "Style frames", body: "Three or four finished stills that lock the look: type, colour, UI treatment." },
-  { step: "Animation", body: "Built in passes: timing first, then easing and detail, then polish." },
-  { step: "Sound & delivery", body: "Music, SFX, captions, and every aspect ratio and length you need." },
+const faqs = [
+  {
+    q: "What do you offer?",
+    a: "Social media management, SaaS explainer videos, and short-form reels and editing. You can book one piece or a monthly retainer that covers planning, editing, and posting.",
+  },
+  {
+    q: "Which platforms do you work with?",
+    a: "Short-form vertical video first: TikTok, Instagram Reels, and YouTube Shorts, plus LinkedIn for B2B and SaaS brands.",
+  },
+  {
+    q: "Can you explain a technical product?",
+    a: "Yes. That's the point. I'm a Computer Engineering graduate and work as a GTM Customer Engineer at a cloud SaaS company, so I learn how the product works before I script it.",
+  },
+  {
+    q: "How do pricing and turnaround work?",
+    a: "Both depend on scope: length, number of cuts, and whether I'm also running the account. Send a brief, even a rough one, and I'll reply with a quote and a timeline.",
+  },
+  {
+    q: "What tools do you use?",
+    a: "Premiere Pro and CapCut for editing, Photoshop and Figma for stills, thumbnails, and style frames.",
+  },
+  {
+    q: "Where are you based?",
+    a: "Tokyo, Japan. I work remotely with teams in other time zones.",
+  },
 ];
 
-const tools = [
-  { Icon: SiAdobeaftereffects, name: "After Effects" },
-  { Icon: SiAdobepremierepro, name: "Premiere Pro" },
-  { Icon: SiAdobephotoshop, name: "Photoshop" },
-  { Icon: SiAdobeillustrator, name: "Illustrator" },
-  { Icon: SiAdobelightroom, name: "Lightroom" },
-  { Icon: SiFigma, name: "Figma" },
-  { Icon: SiBlender, name: "Blender" },
-];
+/* ------------------------------------------------------------------ */
 
-const strip = ["SaaS explainers", "Kinetic typography", "Product walkthroughs", "Social cuts", "Style frames", "Photography"];
+export default async function Home() {
+  const reelsWithCovers = await Promise.all(reels.map(async (r) => ({ ...r, cover: await fetchCover(r.id) })));
+  const top = topPosts[0];
 
-function Eyebrow({ children }: { children: React.ReactNode }) {
-  return <p className="text-xs uppercase tracking-[0.25em] text-fuchsia-300/80">{children}</p>;
-}
+  const metrics = [
+    { value: tiktok.followers.toLocaleString("en"), label: "TikTok followers" },
+    { value: compact(tiktok.likes), label: "Total likes" },
+    { value: compact(top.views), label: "Views on top video" },
+    { value: `${(engagementRate(top) * 100).toFixed(1)}%`, label: "Top video engagement" },
+  ];
 
-export default function Home() {
   return (
     <>
-      {/* Hero */}
-      <section className="mx-auto max-w-6xl px-4 pb-16 pt-14 sm:px-6 md:pt-20">
-        <Eyebrow>{site.name} · Motion &amp; visuals</Eyebrow>
-        <div className="mt-5">
-          <KineticHeadline
-            lines={[
-              { words: ["Motion", "that"] },
-              { words: ["explains."], accent: true },
-            ]}
-          />
-        </div>
-        <div className="mt-8 grid gap-10 lg:grid-cols-[1fr_1.35fr] lg:items-end">
-          <div>
-            <p className="text-legible max-w-md text-base leading-relaxed text-white/70 md:text-lg">
-              I make SaaS explainer videos, kinetic typography, and the
-              visual assets around them, for product teams who need a
-              complicated idea to land in seconds.
-            </p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link
-                href="#work"
-                className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_0_28px_-6px_rgba(236,72,153,0.8)] transition-transform hover:-translate-y-0.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
-              >
-                See the work <MdArrowDownward aria-hidden="true" />
-              </Link>
-              <Link
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/85 transition-colors hover:border-fuchsia-300/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
-              >
-                Send a brief
-              </Link>
+      {/* ---------------------------------------------------------- Hero */}
+      <section className="relative overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-10 h-[620px] w-[620px] -translate-x-1/2 rounded-full bg-[radial-gradient(circle,rgba(168,85,247,0.35),rgba(236,72,153,0.12)_45%,transparent_70%)] blur-2xl"
+        />
+        <div className="relative mx-auto max-w-[1200px] px-5 pt-12 sm:px-8 md:pt-16">
+          {/* Headline split around the portrait on desktop; stacked above it on mobile. */}
+          <div className="grid items-center md:grid-cols-[1fr_minmax(0,400px)_1fr] md:gap-4">
+            <h1 className="contents">
+              <span className="block text-center text-[2.5rem] font-bold leading-[1.05] tracking-[-0.03em] text-white md:order-1 md:text-right md:text-6xl lg:text-7xl">
+                Social media
+              </span>
+              <span className="block text-center text-[2.5rem] font-bold leading-[1.05] tracking-[-0.03em] md:order-3 md:text-left md:text-6xl lg:text-7xl">
+                <span className="bg-gradient-to-r from-purple-300 via-pink-300 to-fuchsia-400 bg-clip-text text-transparent">
+                  people watch.
+                </span>
+              </span>
+            </h1>
+            <div className="feather-portrait relative mx-auto mt-6 aspect-[3/4] w-full max-w-[340px] md:order-2 md:mt-0 md:max-w-[400px]">
+              <Image
+                src="/photos/portrait-headshot-soft.webp"
+                alt="Portrait of Karis Ruth Jumawan"
+                fill
+                priority
+                quality={92}
+                sizes="(min-width: 768px) 400px, 340px"
+                className="object-contain object-bottom"
+              />
             </div>
           </div>
-          <HeroLoop />
-        </div>
-      </section>
 
-      {/* Discipline strip */}
-      <div aria-hidden="true" className="marquee-group overflow-hidden border-y border-white/[0.06] py-5 [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="marquee-track flex w-max animate-marquee">
-          {[0, 1].map((copy) => (
-            <div key={copy} className="flex shrink-0 items-center gap-10 pr-10 font-display text-2xl font-bold text-white/25 md:text-3xl">
-              {strip.map((s) => (
-                <span key={s} className="flex items-center gap-10">
-                  {s}
-                  <span className="text-fuchsia-400/60">✦</span>
-                </span>
-              ))}
+          <div className="relative -mt-16 flex flex-col items-center pb-20 text-center md:-mt-20">
+            <p className="max-w-[34rem] text-lg leading-relaxed text-white/80">
+              I&apos;m Kiki. I manage social accounts, make SaaS explainer
+              videos, and edit reels, as a computer engineer who understands
+              the product before posting about it.
+            </p>
+            <div className="mt-8 flex flex-wrap justify-center gap-3">
+              <Link href="#contact" className="btn-primary">
+                Send a brief <MdArrowForward aria-hidden="true" />
+              </Link>
+              <OpenInViewer src={site.showreel.src} title={site.showreel.title} className="btn-ghost">
+                <MdPlayArrow aria-hidden="true" className="text-lg" /> Watch showreel
+              </OpenInViewer>
             </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Work */}
-      <section aria-labelledby="work-heading" id="work" className="scroll-mt-20">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-          <Eyebrow>Selected work</Eyebrow>
-          <h2 id="work-heading" className="mb-10 mt-3 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
-            Recent pieces
-          </h2>
-          <WorkGrid />
+          </div>
         </div>
       </section>
 
-      {/* Services */}
-      <section aria-labelledby="services-heading" id="services" className="scroll-mt-20">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-          <Eyebrow>Services</Eyebrow>
-          <h2 id="services-heading" className="mt-3 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
-            What I make
+      {/* ------------------------------------------------------ Evidence */}
+      <section aria-labelledby="proof-h" className="relative">
+        <div className="mx-auto max-w-[1200px] px-5 pb-24 sm:px-8">
+          <h2 id="proof-h" className="sr-only">Results on my own TikTok</h2>
+          <dl className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+            {metrics.map((m) => (
+              <div key={m.label} className="glass rounded-2xl p-6">
+                <dt className="text-sm text-white/65">{m.label}</dt>
+                <dd className="tabular mt-2 text-4xl font-bold tracking-[-0.02em] text-white md:text-5xl">{m.value}</dd>
+              </div>
+            ))}
+          </dl>
+
+          <div className="card mt-4 overflow-hidden">
+            <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-white/[0.07] px-6 py-4">
+              <h3 className="text-[17px] font-semibold text-white">Top posts</h3>
+              <a href={tiktok.url} target="_blank" rel="noopener noreferrer" className="focus-ring inline-flex items-center gap-1.5 rounded text-sm text-fuchsia-300 hover:text-fuchsia-200">
+                <SiTiktok aria-hidden="true" /> @{tiktok.handle} <MdArrowOutward aria-hidden="true" />
+              </a>
+            </div>
+            <div className="overflow-x-auto">
+              <table className="tabular w-full min-w-[600px] text-left text-sm">
+                <thead className="text-white/50">
+                  <tr>
+                    <th scope="col" className="px-6 py-3 font-medium">Post</th>
+                    <th scope="col" className="px-3 py-3 text-right font-medium">Views</th>
+                    <th scope="col" className="px-3 py-3 text-right font-medium">Likes</th>
+                    <th scope="col" className="px-3 py-3 text-right font-medium">Comments</th>
+                    <th scope="col" className="px-6 py-3 text-right font-medium">Shares</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {topPosts.map((p) => (
+                    <tr key={p.id} className="border-t border-white/[0.06]">
+                      <td className="px-6 py-3.5">
+                        <a href={postUrl(p)} target="_blank" rel="noopener noreferrer" className="focus-ring rounded text-white hover:text-fuchsia-200">
+                          {p.title}
+                        </a>
+                        <span className="ml-2 text-xs text-white/45">{p.kind === "photo" ? "Carousel" : "Video"}</span>
+                      </td>
+                      <td className="px-3 py-3.5 text-right text-white">{compact(p.views)}</td>
+                      <td className="px-3 py-3.5 text-right text-white/75">{compact(p.likes)}</td>
+                      <td className="px-3 py-3.5 text-right text-white/75">{p.comments.toLocaleString("en")}</td>
+                      <td className="px-6 py-3.5 text-right text-white/75">{p.shares.toLocaleString("en")}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-white/50">
+            From my own TikTok, read from the public profile and post pages on{" "}
+            {tiktok.capturedAt}. Engagement = (likes + comments + shares) ÷ views.
+          </p>
+        </div>
+      </section>
+
+      {/* ------------------------------------------------------ Services */}
+      <section aria-labelledby="services-h" id="services" className="scroll-mt-24">
+        <div className="mx-auto max-w-[1200px] px-5 py-24 sm:px-8">
+          <p className="eyebrow">Services</p>
+          <h2 id="services-h" className="mt-3 max-w-2xl text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-5xl">
+            Content that explains,
+            <br /> and gets watched
           </h2>
-          <ul className="mt-10 grid gap-4 md:grid-cols-2">
-            {services.map((s, i) => (
-              <li
-                key={s.title}
-                data-cursor="magnet"
-                className="rounded-3xl border border-white/10 bg-white/[0.035] p-6 transition-colors hover:border-fuchsia-300/25 md:p-8 md:backdrop-blur-md"
-              >
-                <p className="font-mono text-xs text-fuchsia-300/70">{String(i + 1).padStart(2, "0")}</p>
-                <h3 className="mt-2 font-display text-2xl font-bold text-white">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-white/65">{s.body}</p>
-                <ul className="mt-5 flex flex-wrap gap-2">
+          <ul className="mt-12 grid gap-6 md:grid-cols-2">
+            {services.map((s) => (
+              <li key={s.title} className="card group p-7 transition-[border-color,transform] duration-200 hover:-translate-y-0.5 hover:border-fuchsia-300/25 md:p-8">
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="text-xl font-semibold tracking-[-0.01em] text-white md:text-2xl">{s.title}</h3>
+                  <MdArrowOutward aria-hidden="true" className="mt-1 shrink-0 text-xl text-white/40 transition-colors group-hover:text-fuchsia-300" />
+                </div>
+                <p className="mt-3 max-w-[34rem] text-base leading-relaxed text-white/65">{s.body}</p>
+                <ul className="mt-6 flex flex-wrap gap-2">
                   {s.deliverables.map((d) => (
-                    <li key={d} className="rounded-full bg-fuchsia-400/10 px-3 py-1 text-xs text-fuchsia-100">
+                    <li key={d} className="rounded-full border border-white/10 px-3 py-1 text-[13px] text-white/75">
                       {d}
                     </li>
                   ))}
@@ -157,68 +214,146 @@ export default function Home() {
               </li>
             ))}
           </ul>
-
-          <ul aria-label="Tools" className="mt-10 flex flex-wrap gap-2.5">
-            {tools.map(({ Icon, name }) => (
-              <li
-                key={name}
-                className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-medium text-white/70"
-              >
-                <Icon aria-hidden="true" className="text-sm" /> {name}
-              </li>
-            ))}
-          </ul>
         </div>
       </section>
 
-      {/* Process */}
-      <section aria-labelledby="process-heading" id="process" className="scroll-mt-20">
-        <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6">
-          <Eyebrow>Process</Eyebrow>
-          <h2 id="process-heading" className="mt-3 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
-            From brief to delivery
-          </h2>
-          <ol className="mt-10 grid gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-5">
-            {process.map((p, i) => (
-              <li key={p.step} className="bg-[#0d0820]/90 p-5">
-                <p className="font-display text-3xl font-extrabold text-fuchsia-300/40">{i + 1}</p>
-                <h3 className="mt-2 font-semibold text-white">{p.step}</h3>
-                <p className="mt-1.5 text-sm leading-relaxed text-white/60">{p.body}</p>
-              </li>
-            ))}
-          </ol>
-        </div>
-      </section>
-
-      {/* Stills */}
-      <section aria-labelledby="stills-heading" id="stills" className="scroll-mt-20">
-        <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-20 sm:px-6 md:grid-cols-2">
-          <div className="relative aspect-[4/3] overflow-hidden rounded-3xl border border-white/10">
-            <Image
-              src="/photos/PhotographyCover.png"
-              alt="Photography portfolio cover"
-              fill
-              sizes="(min-width: 768px) 50vw, 100vw"
-              className="object-cover"
-            />
+      {/* -------------------------------------------------------- Social */}
+      <section aria-labelledby="social-h" id="social" className="scroll-mt-24">
+        <div className="mx-auto max-w-[1200px] px-5 py-24 sm:px-8">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <p className="eyebrow">Reels</p>
+              <h2 id="social-h" className="mt-3 text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-5xl">
+                From my own feed
+              </h2>
+              <p className="mt-4 max-w-[34rem] text-base leading-relaxed text-white/65">
+                Shot, edited, and posted by me. Press play to watch on the
+                page; view counts as of {tiktok.capturedAt}.
+              </p>
+            </div>
+            <a href={tiktok.url} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+              <SiTiktok aria-hidden="true" /> Follow on TikTok
+            </a>
           </div>
+          <div className="mt-12">
+            <ReelGrid reels={reelsWithCovers} />
+          </div>
+        </div>
+      </section>
+
+      {/* ---------------------------------------------------------- Work */}
+      <section aria-labelledby="work-h" id="work" className="scroll-mt-24">
+        <div className="mx-auto max-w-[1200px] px-5 py-24 sm:px-8">
+          <p className="eyebrow">Selected work</p>
+          <h2 id="work-h" className="mb-10 mt-3 text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-5xl">
+            Explainers & motion
+          </h2>
+          <WorkGrid />
+        </div>
+      </section>
+
+      {/* --------------------------------------------------------- About */}
+      <section aria-labelledby="about-h" id="about" className="scroll-mt-24">
+        <div className="mx-auto grid max-w-[1200px] items-center gap-16 px-5 py-24 sm:px-8 md:grid-cols-2">
+          {/* Overlapping, slightly rotated photo cards */}
+          <div aria-hidden="true" className="relative mx-auto h-[380px] w-full max-w-[460px] sm:h-[440px]">
+            <div className="absolute left-0 top-6 w-[62%] -rotate-6 overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.4)]">
+              <div className="relative aspect-[4/5]">
+                <Image src="/photos/VideographyCover.png" alt="" fill sizes="280px" className="object-cover" />
+              </div>
+            </div>
+            <div className="absolute right-0 top-0 w-[55%] rotate-[5deg] overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.4)]">
+              <div className="relative aspect-[4/5]">
+                <Image src="/photos/PhotographyCover.png" alt="" fill sizes="260px" className="object-cover" />
+              </div>
+            </div>
+            <div className="absolute bottom-0 left-[22%] w-[56%] rotate-[-1deg] overflow-hidden rounded-2xl border border-white/10 shadow-[0_16px_48px_rgba(0,0,0,0.45)]">
+              <div className="relative aspect-video">
+                <Image src="/work/vidfolio-1.jpg" alt="" fill sizes="260px" className="object-cover" />
+              </div>
+            </div>
+          </div>
+
           <div>
-            <Eyebrow>Stills</Eyebrow>
-            <h2 id="stills-heading" className="mt-3 font-display text-4xl font-bold tracking-tight text-white md:text-5xl">
-              Photography
+            <p className="eyebrow">About</p>
+            <h2 id="about-h" className="mt-3 text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-5xl">
+              An engineer
+              <br /> behind the camera
             </h2>
-            <p className="mt-4 max-w-md text-base leading-relaxed text-white/65">
-              The eye behind the edits. Portraits, places, and events, shot
-              and graded by me. A lot of the framing instincts in the motion
-              work start here.
-            </p>
-            <OpenInViewer
-              src={site.photography.src}
-              title={site.photography.title}
-              className="mt-7 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-5 py-2.5 text-sm font-medium text-white/85 transition-colors hover:border-fuchsia-300/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
-            >
-              <MdOutlinePictureAsPdf aria-hidden="true" /> View the photo book
-            </OpenInViewer>
+            <div className="mt-6 max-w-[34rem] space-y-4 text-base leading-relaxed text-white/70">
+              <p>
+                I&apos;ve been filming and editing since I was young, and I
+                still run my own TikTok, where a single edit passed half a
+                million views.
+              </p>
+              <p>
+                By day I&apos;m a GTM Customer Engineer at a cloud SaaS company
+                in Tokyo, with a Computer Engineering degree behind me. That&apos;s
+                the edge: I can read your docs, sit in on a demo, and turn
+                what your product does into something people stop scrolling
+                for.
+              </p>
+            </div>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <OpenInViewer src={site.photography.src} title={site.photography.title} className="btn-ghost">
+                Photography book
+              </OpenInViewer>
+              <ResumeButton className="btn-ghost">Resume</ResumeButton>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* -------------------------------------------------- FAQ + contact */}
+      <section aria-labelledby="faq-h" id="faq" className="scroll-mt-24">
+        <div className="mx-auto grid max-w-[1200px] gap-10 px-5 py-24 sm:px-8 lg:grid-cols-[1fr_1.3fr]">
+          <div id="contact" className="scroll-mt-24 lg:sticky lg:top-24 lg:self-start">
+            <div className="glass rounded-2xl p-7 md:p-8">
+              <p className="eyebrow">Contact</p>
+              <h2 className="mt-3 text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-white">
+                Got a product
+                <br /> to put on screen?
+              </h2>
+              <p className="mt-4 text-base leading-relaxed text-white/70">
+                Send a brief, even a rough one: what it is, who it&apos;s for,
+                and where it&apos;ll run. I&apos;ll reply with an approach, a
+                quote, and a timeline.
+              </p>
+              <a href={`mailto:${site.email}`} className="btn-primary mt-7 w-full">
+                <MdMailOutline aria-hidden="true" className="text-lg" /> Email me
+              </a>
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                <a href={site.tiktok} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                  <SiTiktok aria-hidden="true" /> TikTok
+                </a>
+                <a href={site.linkedin} target="_blank" rel="noopener noreferrer" className="btn-ghost">
+                  <SiLinkedin aria-hidden="true" /> LinkedIn
+                </a>
+              </div>
+              <p className="mt-5 break-all text-sm text-white/50">{site.email}</p>
+            </div>
+          </div>
+
+          <div>
+            <p className="eyebrow">FAQ</p>
+            <h2 id="faq-h" className="mt-3 text-3xl font-semibold leading-[1.15] tracking-[-0.02em] text-white md:text-5xl">
+              Questions, answered
+            </h2>
+            <ul className="mt-10 space-y-3">
+              {faqs.map((f) => (
+                <li key={f.q}>
+                  <details className="faq group card transition-colors duration-200 open:border-fuchsia-300/40 open:bg-[#1b1030]">
+                    <summary className="focus-ring flex min-h-[56px] cursor-pointer list-none items-center justify-between gap-4 rounded-2xl px-6 py-4 text-[17px] font-medium text-white [&::-webkit-details-marker]:hidden">
+                      {f.q}
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-white/15 text-white/70 transition-transform duration-200 group-open:rotate-45 group-open:border-fuchsia-300/50 group-open:text-fuchsia-200">
+                        <MdAdd aria-hidden="true" />
+                      </span>
+                    </summary>
+                    <p className="max-w-[40rem] px-6 pb-6 text-base leading-relaxed text-white/70">{f.a}</p>
+                  </details>
+                </li>
+              ))}
+            </ul>
           </div>
         </div>
       </section>

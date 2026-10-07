@@ -1,31 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { MdArrowOutward, MdPlayArrow } from "react-icons/md";
+import { MdPlayArrow } from "react-icons/md";
 import { useDocumentViewer } from "@/components/ui/document-viewer";
 import { nav, site } from "@/lib/site";
 
+/** Floating glass nav: wordmark, section links, showreel, one primary action. */
 const SiteNav = () => {
   const { openDocument } = useDocumentViewer();
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] bg-[#0b0718]/70 backdrop-blur-xl">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between gap-4 px-4 sm:px-6">
-        <Link
-          href="/"
-          className="rounded font-display text-lg font-bold tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
-        >
-          kiki<span className="text-fuchsia-400">.</span>
-          <span className="ml-1 hidden text-sm font-medium text-white/55 sm:inline">motion</span>
+    <header className="sticky top-0 z-40 px-4 pt-3 sm:px-6">
+      <div className="glass mx-auto flex h-14 max-w-[1200px] items-center justify-between gap-4 rounded-2xl pl-5 pr-2">
+        <Link href="/" className="focus-ring rounded text-[17px] font-semibold tracking-[-0.02em] text-white">
+          Kiki<span className="text-fuchsia-400">.</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden md:block">
-          <ul className="flex items-center gap-1 text-sm text-white/65">
+          <ul className="flex items-center gap-1 text-[15px] text-white/70">
             {nav.map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className="rounded-full px-3 py-1.5 transition-colors hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
+                  className="focus-ring rounded-lg px-3 py-2 transition-colors duration-200 hover:bg-white/[0.06] hover:text-white"
                 >
                   {item.label}
                 </Link>
@@ -34,22 +31,18 @@ const SiteNav = () => {
           </ul>
         </nav>
 
-        <div className="flex items-center gap-2">
-          <a
-            href={site.techUrl}
-            className="hidden items-center gap-1 rounded-full px-3 py-1.5 text-xs font-medium text-white/60 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300 sm:inline-flex"
-          >
-            Engineering work
-            <MdArrowOutward aria-hidden="true" />
-          </a>
+        <div className="flex items-center gap-1.5">
           <button
             type="button"
             aria-haspopup="dialog"
             onClick={() => openDocument(site.showreel)}
-            className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-1.5 text-xs font-semibold text-white shadow-[0_0_24px_-6px_rgba(236,72,153,0.7)] transition-transform hover:scale-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-300"
+            className="focus-ring hidden min-h-[40px] items-center gap-1.5 rounded-[10px] px-3 text-[15px] font-medium text-white/80 transition-colors hover:text-white sm:inline-flex"
           >
-            <MdPlayArrow aria-hidden="true" className="text-sm" /> Showreel
+            <MdPlayArrow aria-hidden="true" className="text-lg" /> Showreel
           </button>
+          <Link href="/#contact" className="btn-primary min-h-[40px] px-4">
+            Send a brief
+          </Link>
         </div>
       </div>
     </header>

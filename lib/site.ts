@@ -5,19 +5,20 @@
 export const site = {
   name: "Karis Ruth Jumawan",
   handle: "kiki",
-  role: "Motion designer & video editor",
+  role: "Social media manager & video editor",
   location: "Tokyo, Japan",
   email: "blessedkarisj.22@gmail.com",
   linkedin: "https://www.linkedin.com/in/karis-ruth-jumawan/",
+  tiktok: "https://www.tiktok.com/@kikiimnida",
   techUrl: process.env.NEXT_PUBLIC_TECH_URL ?? "http://localhost:3000",
   showreel: { src: "/video/Kiki_Videography.mp4", title: "Showreel" },
   photography: { src: "/pdf/Jumawan-Photography-Portfolio.pdf", title: "Photography portfolio" },
 };
 
 export const nav = [
-  { href: "/#work", label: "Work" },
   { href: "/#services", label: "Services" },
-  { href: "/#process", label: "Process" },
-  { href: "/#stills", label: "Stills" },
-  { href: "/#contact", label: "Contact" },
+  { href: "/#social", label: "Social" },
+  { href: "/#work", label: "Work" },
+  { href: "/#about", label: "About" },
+  { href: "/#faq", label: "FAQ" },
 ];

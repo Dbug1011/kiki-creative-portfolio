@@ -39,3 +39,12 @@ until then.
 ## Deploy (Vercel)
 
 Set `NEXT_PUBLIC_TECH_URL` to the tech site's URL (see `.env.example`).
+
+## Updating the TikTok numbers
+
+Followers, likes, and per-post views/likes/comments/shares live in
+[`lib/social.ts`](lib/social.ts), read by hand from the public TikTok pages.
+Update them together and bump `capturedAt`; the page prints that date next
+to the numbers. Reel cover images are fetched from TikTok's oEmbed endpoint
+when the page builds and refresh every 12 hours (their URLs expire), so
+nothing from TikTok is stored in the repo.

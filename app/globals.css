@@ -136,3 +136,50 @@
 .word-rise { animation: word-rise 0.8s cubic-bezier(0.22, 1, 0.36, 1) both; }
 
 html { scroll-behavior: smooth; }
+
+/* ------------------------------------------------------------------ */
+/* Design system components (portfolio-design.md), kept in this site's */
+/* own purple/pink palette rather than the doc's colours.             */
+/* ------------------------------------------------------------------ */
+@layer components {
+  /* Glass: dark translucent fill, blurred + slightly saturated backdrop,
+     fine light border, top inner highlight, soft drop shadow. Used only on
+     the nav, metric cards, contact panel and filter controls. */
+  .glass {
+    background: rgba(20, 12, 38, 0.66);
+    -webkit-backdrop-filter: blur(20px) saturate(120%);
+    backdrop-filter: blur(20px) saturate(120%);
+    border: 1px solid rgba(239, 237, 247, 0.12);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 16px 48px rgba(0, 0, 0, 0.28);
+  }
+  @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .glass { background: #150d29; }
+  }
+
+  /* Opaque card for dense text (descriptions, FAQ answers). */
+  .card {
+    @apply rounded-2xl border border-white/[0.08] bg-[#130b24];
+  }
+
+  .eyebrow {
+    @apply text-xs font-semibold uppercase tracking-[0.08em] text-fuchsia-300;
+  }
+
+  .btn-primary {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[10px] bg-gradient-to-r from-purple-600 to-pink-600 px-5 text-[15px] font-semibold text-white shadow-[0_8px_28px_-10px_rgba(236,72,153,0.8)] transition-[transform,box-shadow] duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_-10px_rgba(236,72,153,1)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-200 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b0718];
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-[44px] items-center justify-center gap-2 rounded-[10px] border border-white/15 bg-white/[0.05] px-5 text-[15px] font-medium text-white/90 transition-colors duration-200 hover:border-fuchsia-300/40 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-200;
+  }
+  .focus-ring {
+    @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-200;
+  }
+}
+
+/* Hero portrait: one elliptical fade so shoulders and bottom dissolve. */
+.feather-portrait {
+  -webkit-mask-image: radial-gradient(ellipse 70% 72% at 50% 30%, black 52%, transparent 100%);
+  mask-image: radial-gradient(ellipse 70% 72% at 50% 30%, black 52%, transparent 100%);
+}
+
+.tabular { font-variant-numeric: tabular-nums; }
